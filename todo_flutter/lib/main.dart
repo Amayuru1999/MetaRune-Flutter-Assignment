@@ -15,6 +15,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        textTheme: TextTheme(
+          headline5: TextStyle(color: Colors.deepPurple.shade700),
+          subtitle1: TextStyle(color: Colors.deepPurple.shade600),
+        ),
       ),
       home: const TodoListScreen(),
     );
@@ -77,52 +81,74 @@ class _TodoListScreenState extends State<TodoListScreen> {
       appBar: AppBar(
         title: const Text('To-Do List'),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
               controller: _taskController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Enter task',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                prefixIcon: const Icon(Icons.add_task),
               ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final task = _taskController.text;
-              if (task.isNotEmpty) {
-                _addTask(task);
-                _taskController.clear();
-              }
-            },
-            child: const Text('Add Task'),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _tasks.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_tasks[index]),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => _deleteTask(index),
-                  ),
-                  onTap: () async {
-                    final newTask = await showDialog<String>(
-                      context: context,
-                      builder: (context) => EditTaskDialog(task: _tasks[index]),
-                    );
-                    if (newTask != null && newTask.isNotEmpty) {
-                      _editTask(index, newTask);
-                    }
-                  },
-                );
+            const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                final task = _taskController.text;
+                if (task.isNotEmpty) {
+                  _addTask(task);
+                  _taskController.clear();
+                }
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple, // Background color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+              ),
+              child: const Text('Add Task'),
             ),
-          ),
-        ],
+            const SizedBox(height: 16.0),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _tasks.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    elevation: 4.0,
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(16.0),
+                      title: Text(
+                        _tasks[index],
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _deleteTask(index),
+                      ),
+                      onTap: () async {
+                        final newTask = await showDialog<String>(
+                          context: context,
+                          builder: (context) =>
+                              EditTaskDialog(task: _tasks[index]),
+                        );
+                        if (newTask != null && newTask.isNotEmpty) {
+                          _editTask(index, newTask);
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -154,6 +180,7 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
         controller: _editController,
         decoration: const InputDecoration(
           labelText: 'Task',
+          border: OutlineInputBorder(),
         ),
       ),
       actions: [
