@@ -16,8 +16,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
         textTheme: TextTheme(
-          headline5: TextStyle(color: Colors.deepPurple.shade700),
-          subtitle1: TextStyle(color: Colors.deepPurple.shade600),
+          headlineSmall: TextStyle(color: Colors.deepPurple.shade700),
+          titleMedium: TextStyle(color: Colors.deepPurple.shade600),
         ),
       ),
       home: const TodoListScreen(),
@@ -126,7 +126,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                       contentPadding: const EdgeInsets.all(16.0),
                       title: Text(
                         _tasks[index],
-                        style: Theme.of(context).textTheme.subtitle1,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
